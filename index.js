@@ -7,32 +7,6 @@ require('dotenv').config()
 const discordModals = require('discord-modals');
 discordModals(client);
 
-client.commands = new Collection();
-
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-    const commands = require(`./commands/${file}`);
-
-    client.commands.set(commands.name, commands);
-}
-
-const prefix = "a$"
-
-client.once('ready', async () => {
-    mongoose.connect(process.env.mongoUrl,
-        {
-            keepAlive: true
-        }).then(console.log("DB Connected!!"));
-    console.log('Connected!')
-    client.user.setActivity(`${prefix}help`, { type: 'PLAYING', url: 'https://i.imgur.com/SvQ0PxX.png' });
-
-});
-let collecting = false;
-client.on('messageCreate', async message => {
-    if (message.author === client.user) return;
-});
-
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
@@ -65,44 +39,45 @@ client.on('interactionCreate', async interaction => {
                     new TextInputComponent()
                         .setCustomId('q1')
                         .setLabel('Q1: How are you going to handle the server?')
-                        .setStyle('SHORT')
+                        .setStyle('LONG')
                         .setMinLength(4)
-                        .setMaxLength(100)
-                        .setPlaceholder('Answer')
+                        .setMaxLength(600)
+                        .setPlaceholder('Question 1 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q2')
                         .setLabel('Q2: What to do if someone spams?')
-                        .setStyle('SHORT')
+                        .setStyle('LONG')
                         .setMinLength(4)
-                        .setMaxLength(200)
-                        .setPlaceholder('Answer')
+                        .setMaxLength(600)
+                        .setPlaceholder('Question 2 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q3')
                         .setLabel('Q3: What to do if someone abuses their mod?')
-                        .setStyle('SHORT')
+                        .setStyle('LONG')
                         .setMinLength(4)
-                        .setMaxLength(200)
-                        .setPlaceholder('Answer')
+                        .setMaxLength(600)
+                        .setPlaceholder('Question 3 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q4')
                         .setLabel('Q4: Do you have experience?')
-                        .setStyle('SHORT')
+                        .setStyle('LONG')
                         .setMinLength(4)
-                        .setMaxLength(200)
-                        .setPlaceholder('Answer')
+                        .setMaxLength(600)
+                        .setPlaceholder('Question 4 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q5')
                         .setLabel('Q5: Why do you want to be a staff?')
-                        .setStyle('SHORT')
+                        .setStyle('LONG')
                         .setMinLength(4)
-                        .setMaxLength(500)
-                        .setPlaceholder('Answer')
+                        .setMaxLength(600)
+                        .setPlaceholder('Question 5 Answer here!')
                         .setRequired(true)
                 ])
+
 
             showModal(modal, {
                 client: client,
@@ -123,19 +98,19 @@ client.on('modalSubmit', async (modal) => {
         const q5Response = modal.getTextInputValue('q5')
         const successEmbed = new MessageEmbed()
             .setTitle("Success!")
-            .setDescription("Thanks for applying!") // shututp
+            .setDescription("Thanks for applying!") 
             .setColor("GREEN")
         modal.reply({ embeds: [successEmbed] })
         const modalMember = modal.member
         const embed = new MessageEmbed()
             .setAuthor({ name: modalMember.user.username, iconURL: modalMember.displayAvatarURL() })
-            .setTitle(`${modalMember.user.username}#${modalMember.user.discriminator}`)
             .setFields(
                 { name: `Q1: How are you going to handle the server?`, value: Formatters.codeBlock('markdown', q1Response) },
                 { name: `Q2: What are you going to do if someone spams?`, value: Formatters.codeBlock('markdown', q2Response) },
                 { name: `Q3: What to do if someone abuses their mod?`, value: Formatters.codeBlock('markdown', q3Response) },
                 { name: `Q4: Do you have experience?`, value: Formatters.codeBlock('markdown', q4Response) },
-                { name: `Q5: Why do you want to be a staff?`, value: Formatters.codeBlock('markdown', q5Response) }
+                { name: `Q5: Why do you want to be a staff?`, value: Formatters.codeBlock('markdown', q5Response) },
+                { name: `Submitted by:`, value: `<@!${modalMember.id}>` }
 
             )
             .setColor('YELLOW')
@@ -171,6 +146,7 @@ client.on('interactionCreate', async (interaction) => {
             embed = interaction.message.embeds[0]
             embed.color = "GREEN"
             interaction.message.edit({ embeds: [embed], components: [] })
+            doc.deleteOne({ appId: id })
         }
     }
     if (interaction.customId === "rejectApplication") {
@@ -184,7 +160,36 @@ client.on('interactionCreate', async (interaction) => {
             embed = interaction.message.embeds[0]
             embed.color = "RED"
             interaction.message.edit({ embeds: [embed], components: [] })
+            doc.deleteOne({ appId: id })
         }
     }
 })
+
+client.commands = new Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const commands = require(`./commands/${file}`);
+
+    client.commands.set(commands.name, commands);
+}
+
+const prefix = "a$"
+
+client.once('ready', async () => {
+    mongoose.connect(process.env.mongoUrl,
+        {
+            keepAlive: true
+        }).then(console.log("DB Connected!!"));
+    console.log('Connected!')
+    client.user.setActivity(`/apply`, { type: 'WATCHING' });
+
+});
+let collecting = false;
+client.on('messageCreate', async message => {
+    if (message.author === client.user) return;
+});
+
+
 client.login(process.env.TOKEN); 
