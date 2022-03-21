@@ -8,6 +8,7 @@ const clientId = "947731875093418004"
 
 const commands = [
 	new SlashCommandBuilder().setName('apply').setDescription('Apply for staff'),
+	new SlashCommandBuilder().setName('help').setDescription('Help'),
 ]
 	.map(command => command.toJSON());
 

@@ -86,7 +86,18 @@ client.on('interactionCreate', async interaction => {
         }
     }
     // --- apply command end
-    
+    // --- help command
+    if(commandName == 'help') {
+        const embed = new MessageEmbed()
+        .setTitle('Commands!')
+        .setDescription(`\`/apply\` | Apply for staff`)
+        .setColor("GREEN")
+        .setFooter({ text: `Requested by ${interaction.member.user.username}`, iconURL: interaction.member.avatarURL() })
+        .setAuthor({ name: interaction.member.user.username, iconURL: interaction.member.avatarURL() })
+        .setTimestamp()
+
+        interaction.reply({ embeds: [embed], ephemeral: true })
+    }
 })
 
 const { Formatters } = require('discord.js');
