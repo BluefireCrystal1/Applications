@@ -11,7 +11,7 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
-
+    // --- apply command
     if (commandName === 'apply') {
         if (interaction.member.permissions.has("ADMINISTRATOR")) {
             const e = new MessageEmbed()
@@ -85,6 +85,8 @@ client.on('interactionCreate', async interaction => {
             })
         }
     }
+    // --- apply command end
+    
 })
 
 const { Formatters } = require('discord.js');
