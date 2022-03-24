@@ -40,40 +40,40 @@ client.on('interactionCreate', async interaction => {
                         .setCustomId('q1')
                         .setLabel('Q1: How are you going to handle the server?')
                         .setStyle('LONG')
-                        .setMinLength(4)
-                        .setMaxLength(600)
+                        .setMinLength(3)
+                        .setMaxLength(400)
                         .setPlaceholder('Question 1 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q2')
                         .setLabel('Q2: What to do if someone spams?')
                         .setStyle('LONG')
-                        .setMinLength(4)
-                        .setMaxLength(600)
+                        .setMinLength(3)
+                        .setMaxLength(400)
                         .setPlaceholder('Question 2 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q3')
                         .setLabel('Q3: What to do if someone abuses their mod?')
                         .setStyle('LONG')
-                        .setMinLength(4)
-                        .setMaxLength(600)
+                        .setMinLength(3)
+                        .setMaxLength(400)
                         .setPlaceholder('Question 3 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q4')
                         .setLabel('Q4: Do you have experience?')
                         .setStyle('LONG')
-                        .setMinLength(4)
-                        .setMaxLength(600)
+                        .setMinLength(3)
+                        .setMaxLength(400)
                         .setPlaceholder('Question 4 Answer here!')
                         .setRequired(true),
                     new TextInputComponent()
                         .setCustomId('q5')
                         .setLabel('Q5: Why do you want to be a staff?')
                         .setStyle('LONG')
-                        .setMinLength(4)
-                        .setMaxLength(600)
+                        .setMinLength(3)
+                        .setMaxLength(400)
                         .setPlaceholder('Question 5 Answer here!')
                         .setRequired(true)
                 ])
@@ -194,12 +194,12 @@ client.once('ready', async () => {
     mongoose.connect(process.env.mongoUrl,
         {
             keepAlive: true
-        }).then(console.log("DB Connected!!"));
+        }).then(console.log("DB Connected!! MongoDB"));
     console.log('Connected!')
     client.user.setActivity(`/apply`, { type: 'WATCHING' });
 
 });
-let collecting = false;
+
 client.on('messageCreate', async message => {
     if (message.author === client.user) return;
 });
